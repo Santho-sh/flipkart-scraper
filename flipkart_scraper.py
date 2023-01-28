@@ -18,8 +18,6 @@ flipkart = "https://www.flipkart.com/"
 with open("search.json", "r") as file:
     mobiles = json.load(file)
 
-mobile = "Redmi A1"
-
 
 def get_price():
 
@@ -35,6 +33,7 @@ def get_price():
     for i in range(len(all_name)):
 
         if match := re.search(r"(.+) \(.+", all_name[i].text, re.IGNORECASE):
+            
             name = match.group(1).lower()
             if name == mobile.lower():
                 price = all_price[i].text
@@ -47,17 +46,11 @@ def get_price():
 
                 if price < lowest_price:
                     lowest_price = price
+                    
             else:
                 continue
-    print(lowest_price)
+    return lowest_price
+    
+price = get_price()
 
-    # remove Rs symbol from price
-    # price = rs_price[1:]
-    # remove commas from price
-    # price = price.replace(",", "")
-    # convert price from string to int
-    # int_price = int(price)
-    # return int_price
-
-
-cur_price = get_price()
+print(price)
