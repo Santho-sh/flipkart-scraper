@@ -18,6 +18,7 @@ flipkart = "https://www.flipkart.com/"
 with open("search.json", "r") as file:
     mobiles = json.load(file)
 
+mobile = "Redmi A1"
 
 def get_price():
 
@@ -27,8 +28,10 @@ def get_price():
     # extract price using class '_16Jk6d'
     all_name = soup.find_all("div", attrs={"class": "_4rR01T"})
     all_price = soup.find_all("div", attrs={"class": "_30jeq3"})
+    all_links = soup.find_all("a", attrs={"class": "_1fQZEK"})
 
     lowest_price = math.inf
+    link = ""
 
     for i in range(len(all_name)):
 
@@ -40,17 +43,18 @@ def get_price():
                 # remove Rs symbol from price
                 price = price[1:]
                 # remove commas from price
-                price = price.replace(",", "")
-                # contvert price into integer
-                price = int(price)
+                price = int(price.replace(",", ""))
 
                 if price < lowest_price:
                     lowest_price = price
+                    link = all_links[i]["href"]
                     
             else:
                 continue
-    return lowest_price
+ 
+    return lowest_price, f"https://www.flipkart.com{link}"
     
-price = get_price()
+price, link = get_price()
 
 print(price)
+print(link)
