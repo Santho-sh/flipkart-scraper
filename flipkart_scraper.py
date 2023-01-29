@@ -1,7 +1,6 @@
 import requests
 import json
 from bs4 import BeautifulSoup
-import time
 from colorama import Fore, Style
 import re
 import math
