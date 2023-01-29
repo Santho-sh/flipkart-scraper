@@ -5,6 +5,7 @@ from colorama import Fore, Style
 import re
 import math
 
+
 def main():
 
     with open("search.json", "r") as file:
@@ -15,27 +16,29 @@ def main():
 
     for mobile in mobiles:
         try:
-            print(Fore.GREEN + "currently scrapping: " + mobile + Style.RESET_ALL) 
+            print(Fore.GREEN + "currently scrapping: " + mobile + Style.RESET_ALL)
             result = get_re(mobile)
-            
+
             if result != None:
                 output_arr.append(result)
             else:
-                print(Fore.RED + "mobile not found: " + mobile + Style.RESET_ALL)
+                print(Fore.RED + "mobile not found: " +
+                      mobile + Style.RESET_ALL)
                 not_found.append({"mobile": mobile})
-                
+
         except Exception as e:
-            print(Fore.RED + "An exception occurred while scrapping: " + mobile + Style.RESET_ALL)
+            print(Fore.RED + "An exception occurred while scrapping: " +
+                  mobile + Style.RESET_ALL)
             print(e)
-    
+
     with open("output.json", "w") as file:
         json.dump(output_arr, file)
     with open("not_found.json", "w") as file:
         json.dump(not_found, file)
-    
+
 
 def get_re(mobile):
-    
+
     url = f"https://www.flipkart.com/search?q={mobile.lower()}&otracker=AS_Query_HistoryAutoSuggest_2_0&otracker1=AS_Query_HistoryAutoSuggest_2_0&marketplace=FLIPKART"
 
     r = requests.get(url)
@@ -56,25 +59,25 @@ def get_re(mobile):
             name = match.group(1).lower()
             if name == mobile.lower():
                 price = all_price[i].text
-                # remove Rs symbol from price
-                price = price[1:]
-                # remove commas from price
-                price = int(price.replace(",", ""))
+                # remove Rs, commas from price
+                price = int(price[1:].replace(",", ""))
 
                 if price < lowest_price:
                     lowest_price = price
                     link = all_links[i]["href"]
                     link = f"https://www.flipkart.com{link}"
-                    
+
                 if lowest_price == math.inf or link == "":
                     return None
 
-                result: dict = {"mobile": mobile, "price": lowest_price, "link": link}
-                
+                result = {"mobile": mobile, "price": lowest_price,
+                          "link": link, "search_url": url}
+
                 return result
-            
+
             else:
                 continue
-            
+
+
 if __name__ == "__main__":
     main()
