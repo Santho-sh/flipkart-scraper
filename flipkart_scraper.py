@@ -70,6 +70,9 @@ def get_re(mobile):
                 if lowest_price == math.inf or link == "":
                     return None
 
+                link_full = re.search(r"(.+)\?.+", link, re.IGNORECASE)
+                link = link_full.group(1)
+
                 result = {"mobile": mobile, "price": lowest_price,
                           "link": link, "search_url": url}
 
